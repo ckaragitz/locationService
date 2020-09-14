@@ -12,14 +12,20 @@ import psycopg2
 
 app = Flask(__name__)
 
-@app.route('/api/location/<location>', methods=['GET'])
-def location_search(location):
+@app.route('/api/location', methods=['GET'])
+def location_search():
 
     API_KEY = '4_ZmI4BtucMbMADbxYTWt43Pnq-XXGun-pnBSSHL4oh7EKWj4KlIdDFKy-BCOMmVjfH1BIrzAKuPeVtDGRn7M-IvwgPCfWi_A65opw9wsyWxPUt4lfEIoEcoPfJfX3Yx' 
 
     API_HOST = 'https://api.yelp.com'
     SEARCH_PATH = '/v3/businesses/search'
     BUSINESS_PATH = '/v3/businesses/'
+
+    # Receive POST body and parse for values
+    data = request.json
+    term = data.get("term")
+    location = data.get("location")
+
 
     def request(host, path, api_key, url_params=None):
         url_params = url_params or {}
@@ -76,10 +82,10 @@ def location_search(location):
     def main():
         parser = argparse.ArgumentParser()
 
-        parser.add_argument('-q', '--term', dest='term', default=DEFAULT_TERM,
+        parser.add_argument('-q', '--term', dest='term', default=term,
                             type=str, help='Search term (default: %(default)s)')
         parser.add_argument('-l', '--location', dest='location',
-                            default=DEFAULT_LOCATION, type=str,
+                            default=location, type=str,
                             help='Search location (default: %(default)s)')
 
         input_values = parser.parse_args()
