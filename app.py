@@ -25,6 +25,7 @@ def location_search():
     data = request.json
     term = data.get("term")
     location = data.get("location")
+    limit = data.get("limit")
 
 
     def request(host, path, api_key, url_params=None):
@@ -46,7 +47,7 @@ def location_search():
         url_params = {
             'term': term.replace(' ', '+'),
             'location': location.replace(' ', '+'),
-            'limit': SEARCH_LIMIT
+            'limit': limit
         }
         return request(API_HOST, SEARCH_PATH, api_key, url_params=url_params)
 
