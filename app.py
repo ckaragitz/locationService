@@ -102,8 +102,7 @@ def location_search():
                 )
             )
 
-    main()
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return main()
 
 if __name__ == '__main__':
     app.run(debug=True)
