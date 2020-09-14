@@ -79,7 +79,6 @@ def location_search():
 
         return response
 
-
     def main():
         parser = argparse.ArgumentParser()
 
