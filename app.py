@@ -21,12 +21,10 @@ def location_search():
     SEARCH_PATH = '/v3/businesses/search'
     BUSINESS_PATH = '/v3/businesses/'
 
-    # Receive POST body and parse for values
-    data = flask.request.json
-    term = data.get("term")
-    location = data.get("location")
-    limit = data.get("limit")
-
+    # Receive GET body and parse for values
+    term = flask.request.args.get('term')
+    location = flask.request.args.get('location')
+    limit = flask.request.args.get('limit')
 
     def request(host, path, api_key, url_params=None):
         url_params = url_params or {}
