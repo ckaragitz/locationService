@@ -1,5 +1,5 @@
 from __future__ import print_function
-from flask import Flask, request, jsonify, make_response
+import flask
 import argparse
 import json
 import pprint
@@ -10,7 +10,7 @@ import os
 import json
 import psycopg2
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 @app.route('/api/location', methods=['GET'])
 def location_search():
@@ -22,7 +22,7 @@ def location_search():
     BUSINESS_PATH = '/v3/businesses/'
 
     # Receive POST body and parse for values
-    data = request.json
+    data = flask.request.json
     term = data.get("term")
     location = data.get("location")
     limit = data.get("limit")
@@ -106,7 +106,7 @@ def location_search():
             )
 
     results = main()
-    return jsonify(results)
+    return flask.jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
