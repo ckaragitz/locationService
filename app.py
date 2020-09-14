@@ -79,6 +79,8 @@ def location_search():
         print(u'Result for business "{0}" found:'.format(business_id))
         pprint.pprint(response, indent=2)
 
+        return response
+
 
     def main():
         parser = argparse.ArgumentParser()
@@ -92,7 +94,8 @@ def location_search():
         input_values = parser.parse_args()
 
         try:
-            query_api(input_values.term, input_values.location)
+            results = query_api(input_values.term, input_values.location)
+            return results
         except HTTPError as error:
             sys.exit(
                 'Encountered HTTP error {0} on {1}:\n {2}\nAbort program.'.format(
@@ -102,7 +105,8 @@ def location_search():
                 )
             )
 
-    return main()
+    results = main()
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
