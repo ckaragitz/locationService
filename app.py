@@ -98,8 +98,6 @@ class Location:
                 )
             )
 
-        return 0
-
 @app.route('/api/location', methods=['GET'])
 def location_search(): 
 
