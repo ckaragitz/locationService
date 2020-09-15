@@ -110,7 +110,7 @@ def location_search():
 
     location = Location(term, location, limit)
 
-    results = location.main()
+    results = location.main(term, location, limit)
     return jsonify(results)
 
 if __name__ == '__main__':
