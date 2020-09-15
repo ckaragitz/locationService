@@ -19,23 +19,21 @@ class Location:
     SEARCH_PATH = '/v3/businesses/search'
     BUSINESS_PATH = '/v3/businesses/'
 
-    def __init__(self, ):
+    def __init__(self):
         pass
 
     url_params = url_params or {}
     url = '{0}{1}'.format(host, quote(path.encode('utf8')))
     headers = {
-        'Authorization': 'Bearer %s' % api_key,
+        'Authorization': 'Bearer %s' % API_KEY,
     }
 
     print(u'Querying {0} ...'.format(url))
 
-        response = requests.request('GET', url, headers=headers, params=url_params)
-
-        return response.json()
+    response = requests.request('GET', url, headers=headers, params=url_params)
 
 
-    def search(api_key, term, location):
+    def search(self, api_key, term, location):
 
         url_params = {
             'term': term.replace(' ', '+'),
@@ -45,14 +43,14 @@ class Location:
         return request(API_HOST, SEARCH_PATH, api_key, url_params=url_params)
 
 
-    def get_business(api_key, business_id):
+    def get_business(self, api_key, business_id):
 
         business_path = BUSINESS_PATH + business_id
 
         return request(API_HOST, business_path, api_key)
 
 
-    def query_api(term, location):
+    def query_api(self, term, location):
 
         response = search(API_KEY, term, location)
 
@@ -74,7 +72,7 @@ class Location:
 
         return response
 
-    def main():
+    def main(self):
         parser = argparse.ArgumentParser()
 
         parser.add_argument('-q', '--term', dest='term', default=term,
