@@ -72,7 +72,7 @@ class Location:
 
         return response
 
-    def main(self):
+    def main(self, term, location):
         parser = argparse.ArgumentParser()
 
         parser.add_argument('-q', '--term', dest='term', default=term,
@@ -107,7 +107,7 @@ def location_search():
 
     location = Location()
 
-    results = main()
+    results = location.main()
     return jsonify(results)
 
 if __name__ == '__main__':
