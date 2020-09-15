@@ -1,5 +1,5 @@
 from __future__ import print_function
-import flask
+from flask import Flask, request, jsonify
 import argparse
 import json
 import pprint
@@ -10,30 +10,25 @@ import os
 import json
 import psycopg2
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
-@app.route('/api/location', methods=['GET'])
-def location_search():
+class Location:
 
     API_KEY = '4_ZmI4BtucMbMADbxYTWt43Pnq-XXGun-pnBSSHL4oh7EKWj4KlIdDFKy-BCOMmVjfH1BIrzAKuPeVtDGRn7M-IvwgPCfWi_A65opw9wsyWxPUt4lfEIoEcoPfJfX3Yx' 
-
     API_HOST = 'https://api.yelp.com'
     SEARCH_PATH = '/v3/businesses/search'
     BUSINESS_PATH = '/v3/businesses/'
 
-    # Receive GET body and parse for values
-    term = flask.request.args.get('term')
-    location = flask.request.args.get('location')
-    limit = flask.request.args.get('limit')
+    def __init__(self, ):
+        pass
 
-    def request(host, path, api_key, url_params=None):
-        url_params = url_params or {}
-        url = '{0}{1}'.format(host, quote(path.encode('utf8')))
-        headers = {
-            'Authorization': 'Bearer %s' % api_key,
-        }
+    url_params = url_params or {}
+    url = '{0}{1}'.format(host, quote(path.encode('utf8')))
+    headers = {
+        'Authorization': 'Bearer %s' % api_key,
+    }
 
-        print(u'Querying {0} ...'.format(url))
+    print(u'Querying {0} ...'.format(url))
 
         response = requests.request('GET', url, headers=headers, params=url_params)
 
@@ -102,8 +97,20 @@ def location_search():
                 )
             )
 
+        return 0
+
+@app.route('/api/location', methods=['GET'])
+def location_search(): 
+
+    # Receive GET body and parse for values
+    term = request.args.get('term')
+    location = request.args.get('location')
+    limit = request.args.get('limit')
+
+    location = Location()
+
     results = main()
-    return flask.jsonify(results)
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
