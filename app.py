@@ -19,8 +19,10 @@ class Location:
     SEARCH_PATH = '/v3/businesses/search'
     BUSINESS_PATH = '/v3/businesses/'
 
-    def __init__(self):
-        pass
+    def __init__(self, term, location, limit):
+        self.term = term
+        self.location = location
+        self.limit = limit
 
     def make_request(self, host):
         url_params = url_params or {}
@@ -106,7 +108,7 @@ def location_search():
     location = request.args.get('location')
     limit = request.args.get('limit')
 
-    location = Location()
+    location = Location(term, location, limit)
 
     results = location.main()
     return jsonify(results)
