@@ -75,7 +75,7 @@ class Location:
 
         return response
 
-    def main(self, term, location):
+    def main(self, term, location, limit):
         parser = argparse.ArgumentParser()
 
         parser.add_argument('-q', '--term', dest='term', default=term,
