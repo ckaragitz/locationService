@@ -22,18 +22,19 @@ class Location:
     def __init__(self):
         pass
 
-    url_params = url_params or {}
-    url = '{0}{1}'.format(host, quote(path.encode('utf8')))
-    headers = {
-        'Authorization': 'Bearer %s' % API_KEY,
-    }
+    def make_request(self, host):
+        url_params = url_params or {}
+        url = '{0}{1}'.format(host, quote(path.encode('utf8')))
+        headers = {
+            'Authorization': 'Bearer %s' % API_KEY,
+        }
 
-    print(u'Querying {0} ...'.format(url))
+        print(u'Querying {0} ...'.format(url))
 
-    response = requests.request('GET', url, headers=headers, params=url_params)
+        response = requests.request('GET', url, headers=headers, params=url_params)
 
 
-    def search(self, api_key, term, location):
+    def search(self, api_key, term, location, limit):
 
         url_params = {
             'term': term.replace(' ', '+'),
