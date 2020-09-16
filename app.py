@@ -19,12 +19,19 @@ class Location:
     BUSINESS_PATH = '/v3/businesses/'
 
     def __init__(self, term, location, limit):
+
         self.term = term
         self.location = location
         self.limit = limit
 
-    def make_request(self, url_params):
-        url_params = url_params or {}
+    def make_request(self, term, location, limit):
+
+        url_params = {
+            'term': term.replace(' ', '+'),
+            'location': location.replace(' ', '+'),
+            'limit': limit
+        }
+
         url = self.API_HOST + self.SEARCH_PATH
         headers = {
             'Authorization': 'Bearer %s' % self.API_KEY,
@@ -35,20 +42,10 @@ class Location:
         response = requests.request('GET', url, headers=headers, params=url_params)
         return response.json()
 
-    def search(self, term, location, limit):
-
-        url_params = {
-            'term': term.replace(' ', '+'),
-            'location': location.replace(' ', '+'),
-            'limit': limit
-        }
-
-        return self.make_request(url_params=url_params)
-
     def main(self, term, location, limit):
 
         try:
-            results = self.search(term, location, limit)
+            results = self.make_request(term, location, limit)
             return results
         except HTTPError as error:
             sys.exit(
