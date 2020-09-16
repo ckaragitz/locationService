@@ -1,6 +1,5 @@
 from __future__ import print_function
 from flask import Flask, request, jsonify
-import argparse
 import json
 import pprint
 import requests
@@ -24,9 +23,9 @@ class Location:
         self.location = location
         self.limit = limit
 
-    def make_request(self, host):
+    def make_request(self, path):
         url_params = url_params or {}
-        url = '{0}{1}'.format(host, quote(path.encode('utf8')))
+        url = '{0}{1}'.format(self.host, path)
         headers = {
             'Authorization': 'Bearer %s' % API_KEY,
         }
@@ -36,31 +35,31 @@ class Location:
         response = requests.request('GET', url, headers=headers, params=url_params)
 
 
-    def search(self, api_key, term, location, limit):
+    def search(self):
 
         url_params = {
             'term': term.replace(' ', '+'),
             'location': location.replace(' ', '+'),
             'limit': limit
         }
-        return request(API_HOST, SEARCH_PATH, api_key, url_params=url_params)
+        return request(self.API_HOST, self.SEARCH_PATH, self.api_key, url_params=url_params)
 
 
-    def get_business(self, api_key, business_id):
+    def get_business(self, business_id):
 
-        business_path = BUSINESS_PATH + business_id
+        business_path = self.BUSINESS_PATH + business_id
 
-        return request(API_HOST, business_path, api_key)
+        return request(self.API_HOST, self.business_path, self.API_KEY)
 
 
-    def query_api(self, term, location):
+    def query_api(self):
 
-        response = search(API_KEY, term, location)
+        response = search(self.API_KEY, self.term, self.location)
 
         businesses = response.get('businesses')
 
         if not businesses:
-            print(u'No businesses for {0} in {1} found.'.format(term, location))
+            print(u'No businesses for {0} in {1} found.'.format(self.term, self.location))
             return
 
         business_id = businesses[0]['id']
@@ -68,26 +67,17 @@ class Location:
         print(u'{0} businesses found, querying business info ' \
             'for the top result "{1}" ...'.format(
                 len(businesses), business_id))
-        response = get_business(API_KEY, business_id)
+        response = get_business(business_id)
 
         print(u'Result for business "{0}" found:'.format(business_id))
         pprint.pprint(response, indent=2)
 
         return response
 
-    def main(self, term, location, limit):
-        parser = argparse.ArgumentParser()
-
-        parser.add_argument('-q', '--term', dest='term', default=term,
-                            type=str, help='Search term (default: %(default)s)')
-        parser.add_argument('-l', '--location', dest='location',
-                            default=location, type=str,
-                            help='Search location (default: %(default)s)')
-
-        input_values = parser.parse_args()
+    def main(self):
 
         try:
-            results = query_api(input_values.term, input_values.location)
+            results = query_api()
             return results
         except HTTPError as error:
             sys.exit(
@@ -108,8 +98,9 @@ def location_search():
 
     location = Location(term, location, limit)
 
-    results = location.main(term, location, limit)
+    results = location.main()
     return jsonify(results)
 
 if __name__ == '__main__':
+    import argparse
     app.run(debug=True)
