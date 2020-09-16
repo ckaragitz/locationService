@@ -42,6 +42,18 @@ class Location:
         response = requests.request('GET', url, headers=headers, params=url_params)
         return response.json()
 
+    def get_business(self, term, location, limit, biz_id):
+
+        url = self.API_HOST + self.BUSINESS_PATH + '/' + biz_id
+        headers = {
+            'Authorization': 'Bearer %s' % self.API_KEY,
+        }
+
+        print(u'Querying {0} ...'.format(url))
+
+        response = requests.request('GET', url, headers=headers)
+        return response.json()
+
     def main(self, term, location, limit):
 
         try:
