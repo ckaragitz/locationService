@@ -23,61 +23,31 @@ class Location:
         self.location = location
         self.limit = limit
 
-    def make_request(self, path):
+    def make_request(self, url_params):
         url_params = url_params or {}
-        url = '{0}{1}'.format(self.host, path)
+        url = self.API_HOST + self.SEARCH_PATH
         headers = {
-            'Authorization': 'Bearer %s' % API_KEY,
+            'Authorization': 'Bearer %s' % self.API_KEY,
         }
 
         print(u'Querying {0} ...'.format(url))
 
         response = requests.request('GET', url, headers=headers, params=url_params)
 
-
-    def search(self):
+    def search(self, term, location, limit):
 
         url_params = {
             'term': term.replace(' ', '+'),
             'location': location.replace(' ', '+'),
             'limit': limit
         }
-        return request(self.API_HOST, self.SEARCH_PATH, self.api_key, url_params=url_params)
 
+        return self.make_request(url_params=url_params)
 
-    def get_business(self, business_id):
-
-        business_path = self.BUSINESS_PATH + business_id
-
-        return request(self.API_HOST, self.business_path, self.API_KEY)
-
-
-    def query_api(self):
-
-        response = search(self.API_KEY, self.term, self.location)
-
-        businesses = response.get('businesses')
-
-        if not businesses:
-            print(u'No businesses for {0} in {1} found.'.format(self.term, self.location))
-            return
-
-        business_id = businesses[0]['id']
-
-        print(u'{0} businesses found, querying business info ' \
-            'for the top result "{1}" ...'.format(
-                len(businesses), business_id))
-        response = get_business(business_id)
-
-        print(u'Result for business "{0}" found:'.format(business_id))
-        pprint.pprint(response, indent=2)
-
-        return response
-
-    def main(self):
+    def main(self, term, location, limit):
 
         try:
-            results = query_api()
+            results = self.search(term, location, limit)
             return results
         except HTTPError as error:
             sys.exit(
@@ -96,9 +66,9 @@ def location_search():
     location = request.args.get('location')
     limit = request.args.get('limit')
 
-    location = Location(term, location, limit)
+    searchLocation = Location(term, location, limit)
 
-    results = location.main()
+    results = searchLocation.main(term, location, limit)
     return jsonify(results)
 
 if __name__ == '__main__':
