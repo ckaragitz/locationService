@@ -33,6 +33,7 @@ class Location:
         print(u'Querying {0} ...'.format(url))
 
         response = requests.request('GET', url, headers=headers, params=url_params)
+        return response.json()
 
     def search(self, term, location, limit):
 
@@ -72,5 +73,4 @@ def location_search():
     return jsonify(results)
 
 if __name__ == '__main__':
-    import argparse
     app.run(debug=True)
