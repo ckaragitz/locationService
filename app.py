@@ -42,7 +42,7 @@ class Location:
         response = requests.request('GET', url, headers=headers, params=url_params)
         return response.json()
 
-    def get_business(self, biz_id):
+    def get_business(self, term, location, limit, biz_id):
 
         url = self.API_HOST + self.BUSINESS_PATH + '/' + biz_id
         headers = {
@@ -50,6 +50,8 @@ class Location:
         }
 
         print(u'Querying {0} ...'.format(url))
+
+        response = self.make_request(term, location, limit)
 
         response = requests.request('GET', url, headers=headers)
         return response.json()
